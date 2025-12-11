@@ -1,9 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using Unity.Robotics.ROSTCPConnector;
 using RosMessageTypes.Sensor;
@@ -64,7 +61,7 @@ public class GPS : MonoBehaviour
 
     internal void ScanBaseStations()
     {
-        baseStations = FindObjectsOfType<GPSBaseStation>();
+        baseStations = FindObjectsByType<GPSBaseStation>(FindObjectsSortMode.None);
         if (baseStations.Length < 1)
         {
             Debug.LogWarning("No GPS base stations found in the scene.");
