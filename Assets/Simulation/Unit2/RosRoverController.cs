@@ -35,6 +35,11 @@ public class RosRoverController : MonoBehaviour
 
     // For input handling
     private Vector2 moveInput;
+    
+    // ROS message handling
+    private bool useROSTargets = false;
+    private float rosMessageTimeout = 0.5f;
+    private float lastROSMessageTime = 0f;
 
     void Start()
     {
@@ -48,6 +53,7 @@ public class RosRoverController : MonoBehaviour
     void OnTargetsReceived(RosMessageTypes.Std.Float64MultiArrayMsg msg)
     {
         // 4要素ベクトル [FL, FR, RL, RR] (rad/s)
+        Debug.Log($"Received target speeds message with {msg.data.Length} elements");
         for (int i = 0; i < 4; i++)
         {
             if (i < msg.data.Length)
@@ -55,17 +61,31 @@ public class RosRoverController : MonoBehaviour
             else
                 targetSpeeds[i] = 0f;
         }
+        Debug.Log($"Target speeds - FL: {targetSpeeds[0]:F3} rad/s, FR: {targetSpeeds[1]:F3} rad/s, RL: {targetSpeeds[2]:F3} rad/s, RR: {targetSpeeds[3]:F3} rad/s");
+        useROSTargets = true;
+        lastROSMessageTime = Time.time;
     }
 
     void FixedUpdate()
     {
-        // moveInput.y が前後入力 (W/Sキー)、moveInput.x が左右入力 (A/Dキー)
-        float forward = moveInput.y; // 前後
-        float turn = moveInput.x;    // 左右
-        targetSpeeds[0] = forward * maxMotorTorque + turn * maxMotorTorque; // 前左
-        targetSpeeds[1] = forward * maxMotorTorque - turn * maxMotorTorque; // 前右
-        targetSpeeds[2] = forward * maxMotorTorque + turn * maxMotorTorque; // 後左
-        targetSpeeds[3] = forward * maxMotorTorque - turn * maxMotorTorque; // 後右
+        // ROS メッセージのタイムアウト判定
+        if (useROSTargets && (Time.time - lastROSMessageTime) > rosMessageTimeout)
+        {
+            useROSTargets = false;
+            Debug.Log("ROS target timeout - switching to keyboard input");
+        }
+
+        // ROS メッセージを使用していない場合はキーボード入力を適用
+        if (!useROSTargets)
+        {
+            // moveInput.y が前後入力 (W/Sキー)、moveInput.x が左右入力 (A/Dキー)
+            float forward = moveInput.y; // 前後
+            float turn = moveInput.x;    // 左右
+            targetSpeeds[0] = forward * maxMotorTorque + turn * maxMotorTorque; // 前左
+            targetSpeeds[1] = forward * maxMotorTorque - turn * maxMotorTorque; // 前右
+            targetSpeeds[2] = forward * maxMotorTorque + turn * maxMotorTorque; // 後左
+            targetSpeeds[3] = forward * maxMotorTorque - turn * maxMotorTorque; // 後右
+        }
 
         // 各WheelColliderの現在の回転速度(rad/s)を取得
         currentSpeeds[0] = frontLeftWheelCollider.rpm * 2f * Mathf.PI / 60f;

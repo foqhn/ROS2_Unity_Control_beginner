@@ -196,6 +196,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7469417551304158390, guid: 96ebcce834aaaa34ea338a4af37dbfb7, type: 3}
+      propertyPath: m_Actions
+      value: 
+      objectReference: {fileID: -944628639613478452, guid: f6c2e4942ca7bdd42a7743e0f7795808, type: 3}
+    - target: {fileID: 7469417551304158390, guid: 96ebcce834aaaa34ea338a4af37dbfb7, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7469417551304158390, guid: 96ebcce834aaaa34ea338a4af37dbfb7, type: 3}
+      propertyPath: m_DefaultActionMap
+      value: Rover
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8093778701395373928, guid: 96ebcce834aaaa34ea338a4af37dbfb7, type: 3}
     m_RemovedGameObjects: []
@@ -701,6 +713,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4134562503614843801, guid: df9df3b71578f3946a75177f6ba41b84, type: 3}
+      propertyPath: m_RosIPAddress
+      value: 127.0.0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 5115986586269250630, guid: df9df3b71578f3946a75177f6ba41b84, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.43703
